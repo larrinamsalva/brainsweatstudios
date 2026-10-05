@@ -4,7 +4,7 @@ import type { SceneData } from '../engine/geometry';
 import Icon from '../components/Icon';
 
 export function GameLayout({ kind, title, description, data, paused, children, sceneLabel }: { kind: string; title: string; description: string; data?: SceneData; paused?: boolean; children: ReactNode; sceneLabel?: string }) {
-  return <div className="game-layout"><div className="scene-column"><Scene kind={kind} data={data} label={sceneLabel || title} paused={paused} /><div className="mission-brief"><span className="eyebrow">YOUR MISSION</span><h2>{title}</h2><p>{description}</p></div></div><fieldset disabled={paused} className="game-controls" aria-label="Mission controls">{children}</fieldset></div>;
+  return <div className="game-layout" data-game-kind={kind}><div className="scene-column"><Scene kind={kind} data={data} label={sceneLabel || title} paused={paused} /><div className="mission-brief"><span className="eyebrow">YOUR MISSION</span><h2>{title}</h2><p>{description}</p></div></div><fieldset disabled={paused} className="game-controls" aria-label="Mission controls">{children}</fieldset></div>;
 }
 export function Stat({ label, value, icon, accent }: { label: string; value: string | number; icon?: string; accent?: boolean }) { return <div className={`game-stat ${accent ? 'accent' : ''}`}>{icon && <Icon name={icon} />}<div><span>{label}</span><strong>{value}</strong></div></div>; }
 export function Stats({ children }: { children: ReactNode }) { return <div className="game-stats">{children}</div>; }
