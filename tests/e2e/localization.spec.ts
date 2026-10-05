@@ -17,6 +17,7 @@ async function spanish(page: Page) {
 
 test('Spanish world instructions, controls, and assistant survive navigation and refresh', async ({ page }) => {
   const errors = captureErrors(page); await spanish(page);
+  await page.goto('./#/game/money'); await expect(page.locator('.flagship-role')).toContainText('Capitán del dinero'); await expect(page.locator('.flagship-beats')).toContainText('Construye tu plan');
   for (const world of worlds) {
     await page.goto(`./#/game/${world}`);
     await page.getByRole('button', { name: 'Iniciar misión 1', exact: true }).click();
