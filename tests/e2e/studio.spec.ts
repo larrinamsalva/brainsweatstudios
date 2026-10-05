@@ -97,6 +97,21 @@ test('mobile layout and touch controls remain usable at 320 and 390 pixels', asy
   await page.getByRole('button', { name: 'Open navigation' }).tap(); await expect(page.getByRole('link', { name: 'Settings', exact: true })).toBeVisible(); await page.getByRole('link', { name: 'Play', exact: true }).tap();
   await page.getByRole('link', { name: 'Play Money Mission' }).tap(); await page.getByRole('button', { name: 'Start mission 1' }).tap(); await page.getByRole('button', { name: 'Start the month' }).tap(); for (let i = 0; i < 4; i++) await page.getByRole('button', { name: /Find another way/ }).tap(); await expect(page.getByText('EXPERIMENT COMPLETE')).toBeVisible(); await context.close();
 });
+test('flagship worlds frame play as adventures and reward the next journey', async ({ page }) => {
+  const flagships = [['money', 'Money Captain'], ['hustle', 'Tiny Business Boss'], ['scam', 'Scam Detective'], ['fix', 'Workshop Troubleshooter'], ['code', 'Robot Programmer']] as const;
+  for (const [world, role] of flagships) {
+    await page.goto(`/#/game/${world}`);
+    await expect(page.locator('.flagship-quest-card')).toBeVisible();
+    await expect(page.locator('.flagship-role')).toContainText(role);
+    await expect(page.locator('.flagship-beats li')).toHaveCount(3);
+  }
+  await openGame(page, 'money');
+  await complete(page, 'money', 0, 0);
+  await expect(page.getByText('QUEST CLEARED', { exact: true })).toBeVisible();
+  await expect(page.locator('.celebration-burst i')).toHaveCount(12);
+  await expect(page.locator('.next-adventure-card')).toContainText('Side Hustle Simulator');
+  await expect(page.locator('.next-adventure-card')).toHaveAttribute('href', '#/game/hustle');
+});
 test('WebGL fallback keeps a game playable', async ({ page }) => {
   await page.addInitScript(() => { const original = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function (type: string, ...args: unknown[]) { if (type === 'webgl2') return null; return original.call(this, type as '2d', ...args); } as typeof original; });
   await openGame(page, 'money'); await expect(page.getByText('Vector mode · all controls still work')).toBeVisible(); await complete(page, 'money', 0, 0);
