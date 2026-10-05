@@ -1,14 +1,16 @@
+import type { GameId } from './types';
+
 export interface FlagshipAdventure {
   role: string;
   hook: string;
   beats: readonly [string, string, string];
   celebration: string;
-  nextId: string;
+  nextId: GameId;
   nextLabel: string;
   nextReason: string;
 }
 
-export const flagshipAdventures: Partial<Record<string, FlagshipAdventure>> = {
+export const flagshipAdventures: Partial<Record<GameId, FlagshipAdventure>> = {
   money: {
     role: 'Money Captain',
     hook: 'Make the plan, survive the surprises, and finish the month stronger than you started.',
