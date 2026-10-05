@@ -65,7 +65,7 @@ try {
     // The other old tab can still fetch its lazy game chunk during activation.
     await other.goto(`${base}#/game/code`); await other.getByRole('button', { name: 'Start mission 1', exact: true }).click(); await other.locator('.game-controls').waitFor();
     await page.reload(); await page.getByRole('link', { name: 'All worlds', exact: true }).click(); await page.locator('.world-card').last().waitFor(); assert.equal(await page.locator('.world-card').count(), studio.worlds);
-    await page.getByText(`NEW IN VERSION ${studio.major}`, { exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'What sounds fun today?', exact: true }).waitFor(); assert.equal(await page.locator('.adventure-card').count(), 6);
     // Migration is initially in memory; the next normal save writes the v2 bundle.
     await page.getByRole('link', { name: 'My progress', exact: true }).click(); await page.getByText(`1/${studio.slots}`, { exact: true }).waitFor();
     await page.getByLabel('Difficulty', { exact: true }).selectOption('builder'); await page.getByLabel('Difficulty', { exact: true }).selectOption('explorer');
