@@ -35,7 +35,7 @@ const components = Object.fromEntries(games.map(game => [game.id, lazy(game.load
 function savedOutcome(key: string): GameResult | null { const value = checkpoint(key)?.state.baseOutcome; return value && typeof value === 'object' && !Array.isArray(value) && typeof value.score === 'number' && typeof value.summary === 'string' && typeof value.lesson === 'string' ? value as unknown as GameResult : null; }
 export default function GameHost({ id, initialMission, initialPractice = false, embedded = false }: { embedded?:boolean; id: string; initialMission?: number; initialPractice?: boolean }) {
   const game = gameById(id); const { save, finish } = useStudio();
-  const flagship = flagshipAdventures[id];
+  const flagship = game ? flagshipAdventures[game.id] : undefined;
   const [mission, setMission] = useState(() => initialMission ?? Math.min(7, Number(Object.keys(save.checkpoints).filter(k => k.startsWith(`${id}/${save.difficulty}/`)).sort((a, b) => save.checkpoints[b].updatedAt.localeCompare(save.checkpoints[a].updatedAt))[0]?.split('/')[2] || 0))); const sessionKey = `${id}/${save.difficulty}/${mission}`; const [pending, setPending] = useState<GameResult | null>(() => savedOutcome(sessionKey)); const [botPractice, setBotPractice] = useState(() => !!checkpoint(sessionKey)?.botPractice); const [started, setStarted] = useState(() => !save.settings.tutorials || initialPractice); const [paused, setPaused] = useState(false);
   const [result, setResult] = useState<{ outcome: GameResult; award: ReturnType<typeof recordResult> } | null>(null);
   const [attempt, setAttempt] = useState(0); const done = useRef(false);
