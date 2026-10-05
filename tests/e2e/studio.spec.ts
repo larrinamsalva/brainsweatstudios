@@ -85,7 +85,7 @@ test('progress survives refresh, export, reset, and import; invalid import prese
   expect(JSON.parse((await page.evaluate(() => localStorage.getItem('brain-sweat-studio:v1')))!)).toEqual(JSON.parse(saved!));
 });
 test('navigation, search, filters, 404 handling, and hash-route refresh work', async ({ page }) => {
-  await page.goto('/'); await expect(page.locator('.world-card')).toHaveCount(37);
+  await page.goto('/'); await expect(page.locator('.world-card')).toHaveCount(37); await expect(page.locator('.adventure-card')).toHaveCount(6); await expect(page.getByRole('heading', { name: 'What sounds fun today?' })).toBeVisible();
   await page.getByPlaceholder('Search worlds or skills').fill('money'); await expect(page.locator('.world-card')).toHaveCount(5);
   await page.getByPlaceholder('Search worlds or skills').fill(''); await page.getByRole('button', { name: 'Digital worlds', exact: true }).click(); await expect(page.locator('.world-card')).toHaveCount(2);
   for (const route of ['progress', 'challenges', 'achievements', 'skills', 'settings', 'privacy', 'adults']) { await page.goto(`/#/${route}`); await expect(page.locator('main h1')).toBeVisible(); await page.reload(); await expect(page.locator('main h1')).toBeVisible(); }

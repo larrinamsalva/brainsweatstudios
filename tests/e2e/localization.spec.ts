@@ -12,6 +12,7 @@ async function spanish(page: Page) {
   await page.getByLabel('Language', { exact: true }).selectOption('es');
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
   await expect(page.getByRole('heading', { name: 'Tu próxima gran idea empieza aquí.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '¿Qué te apetece hacer hoy?' })).toBeVisible();
 }
 
 test('Spanish world instructions, controls, and assistant survive navigation and refresh', async ({ page }) => {
