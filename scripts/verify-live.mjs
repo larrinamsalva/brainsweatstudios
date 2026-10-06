@@ -9,7 +9,20 @@ const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_C
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } }); const page = await context.newPage(); const errors = []; page.on('pageerror', e => errors.push(e.message));
   await page.goto(base, { timeout: 30000 }); await page.locator('.world-card').last().waitFor(); assert.equal(await page.locator('.world-card').count(), studio.worlds);
-  await page.getByText(`NEW IN VERSION ${studio.major}`, { exact: true }).waitFor();
+  assert.equal(await page.locator('meta[name="application-version"]').getAttribute('content'), studio.version, 'The published release metadata must match the checked-out catalogue.');
+  await page.getByRole('heading', { name: 'What sounds fun today?', exact: true }).waitFor();
+  assert.equal(await page.locator('.adventure-card').count(), 6);
+  for (const [name, world] of [['Money Moves', 'money'], ['Street Smart', 'scam'], ['Build & Fix', 'fix'], ['Create Something', 'music'], ['Science Quest', 'power'], ['Future You', 'career']]) {
+    const path = page.locator('.adventure-card').filter({ has: page.getByRole('heading', { name, exact: true }) });
+    await path.waitFor(); assert.equal(await path.getAttribute('href'), `#/game/${world}`);
+  }
+  const lab = page.locator('.advanced-lab-banner');
+  await lab.getByRole('heading', { name: 'Advanced Lab', exact: true }).waitFor();
+  for (const [name, route] of [['Agent Circuit', 'academy?tab=circuit'], ['Town Zero', 'academy?tab=worlds'], ['Agent Garage', 'academy?tab=garage'], ['Performance workshop', 'academy?tab=locker']]) {
+    const link = lab.getByRole('link', { name, exact: true });
+    await link.waitFor(); assert.equal(await link.getAttribute('href'), `#/${route}`);
+  }
+  console.log('Live home verified: matching release metadata, six adventure paths and retained Advanced Lab entrances.');
   await page.getByRole('link', { name: 'Assistant & council', exact: true }).click(); await page.getByRole('heading', { name: 'Your personal assistant', exact: true }).waitFor();
   for (const role of ['Mentor', 'Benefactor', 'Strategist']) await page.getByRole('heading', { name: role, exact: true }).waitFor();
   await page.getByLabel('Ask your assistant', { exact: true }).fill('Help me plan a garden'); await page.getByRole('button', { name: 'Send to assistant', exact: true }).click(); await page.getByRole('link', { name: 'Botany Garden · Mission 1', exact: false }).waitFor();
@@ -114,6 +127,6 @@ try {
     assert.deepEqual((await readCircuit()).events.map(e => e.digest), circuit.events.map(e => e.digest));
     console.log('Live Agent Circuit: six events, 19 native phases, seven families, actual Town role rotations, proven score/research/show continuity and stopped profile restoration.');
   }
-  await page.screenshot({ path: `docs/screenshots/live-v${studio.major}.png` }); assert.deepEqual(errors, []);
+  await page.screenshot({ path: 'docs/screenshots/live-studio.png' }); assert.deepEqual(errors, []);
   console.log(`Live v${studio.major} verified: 30-day Town Zero, long replay, stopped restoration, Agent Garage, hidden survey, validated mock actions, world replay, profile restore, 37 worlds, 48 classes, controller optimization, learned rover, frozen evaluation, academy refresh, council, retro lab, player rewards, bot isolation, Spanish refresh, Agent Locker passport continuity and stopped restoration, and zero page errors.`); await context.close();
 } finally { await browser.close(); }
