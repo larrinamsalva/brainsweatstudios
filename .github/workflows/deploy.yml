@@ -79,6 +79,12 @@ jobs:
           LEGACY_DIST="$legacy_upgrade_dir/dist" CURRENT_DIST="$before_upgrade_dir/dist" REPRODUCE_STALE=1 node scripts/verify-upgrade.mjs
           LEGACY_DIST="$legacy_upgrade_dir/dist" node scripts/verify-upgrade.mjs
           node scripts/verify-production.mjs
+      - name: Verify the live-check contract against the production preview
+        run: |
+          node scripts/test-server.mjs &
+          studio_server_pid=$!
+          trap 'kill "$studio_server_pid"' EXIT
+          LIVE_SITE_URL=http://127.0.0.1:5173/brainsweatstudios/ node scripts/verify-live.mjs
       - name: Verify advanced learning flows and graphics
         run: |
           TEST_PRODUCTION=1 ONLINE_TEST_SERVER=1 npm run test:e2e -- tests/e2e/academy-features.spec.ts tests/e2e/runtime-features.spec.ts tests/e2e/agent-garage-features.spec.ts tests/e2e/world-features.spec.ts tests/e2e/career-features.spec.ts tests/e2e/family-features.spec.ts tests/e2e/performance-features.spec.ts tests/e2e/circuit-features.spec.ts tests/e2e/advanced-features.spec.ts tests/e2e/rung4-features.spec.ts tests/e2e/online-features.spec.ts tests/e2e/low-power.spec.ts tests/e2e/localization.spec.ts --workers=2
@@ -136,5 +142,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: live-studio-screenshot
-          path: docs/screenshots/live-v8.png
+          path: docs/screenshots/live-studio.png
           retention-days: 14
