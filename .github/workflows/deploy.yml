@@ -87,7 +87,7 @@ jobs:
           LIVE_SITE_URL=http://127.0.0.1:5173/brainsweatstudios/ node scripts/verify-live.mjs
       - name: Verify advanced learning flows and graphics
         run: |
-          TEST_PRODUCTION=1 ONLINE_TEST_SERVER=1 npm run test:e2e -- tests/e2e/academy-features.spec.ts tests/e2e/runtime-features.spec.ts tests/e2e/agent-garage-features.spec.ts tests/e2e/world-features.spec.ts tests/e2e/career-features.spec.ts tests/e2e/family-features.spec.ts tests/e2e/performance-features.spec.ts tests/e2e/circuit-features.spec.ts tests/e2e/advanced-features.spec.ts tests/e2e/rung4-features.spec.ts tests/e2e/online-features.spec.ts tests/e2e/low-power.spec.ts tests/e2e/localization.spec.ts --workers=2
+          TEST_PRODUCTION=1 ONLINE_TEST_SERVER=1 npm run test:e2e -- tests/e2e/academy-features.spec.ts tests/e2e/runtime-features.spec.ts tests/e2e/agent-garage-features.spec.ts tests/e2e/world-features.spec.ts tests/e2e/career-features.spec.ts tests/e2e/family-features.spec.ts tests/e2e/performance-features.spec.ts tests/e2e/circuit-features.spec.ts tests/e2e/advanced-features.spec.ts tests/e2e/rung4-features.spec.ts tests/e2e/online-features.spec.ts tests/e2e/low-power.spec.ts tests/e2e/localization.spec.ts tests/e2e/driving.spec.ts --workers=2
       - name: Capture review graphics
         if: always()
         run: |
@@ -96,6 +96,7 @@ jobs:
           trap 'kill "$studio_server_pid"' EXIT
           TEST_BASE_URL=http://127.0.0.1:5173/brainsweatstudios/ node scripts/capture-v7.mjs
           TEST_BASE_URL=http://127.0.0.1:5173/brainsweatstudios/ node scripts/capture-v8.mjs
+          TEST_BASE_URL=http://127.0.0.1:5173/brainsweatstudios/ node scripts/capture-driving.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -103,6 +104,7 @@ jobs:
           path: |
             docs/screenshots/v7
             docs/screenshots/v8
+            docs/screenshots/driving
             test-results
           retention-days: 14
       - name: Upload website

@@ -6,6 +6,7 @@ import { validateAcademy, type AcademySave } from '../training/models';
 import { decodeCircuitStorage, encodeCircuitStorage } from '../circuit/storage';
 import { plain } from '../runtime/data';
 import type { CircuitSave } from '../circuit/types';
+import { validateDriving, type DrivingProgress } from '../data/driving';
 export const PROFILE_KEY = 'brain-sweat-studio:profiles:v2';
 export interface Profile { id: string; label: string; save: SaveData }
 interface Bundle { version: 2; active: string; profiles: Profile[] }
@@ -116,6 +117,11 @@ export function refreshProfiles() { revision++; listeners.forEach(l => l()); }
 export function saveAcademy(value: AcademySave, profileId: string) {
   if (profileId !== currentProfile().id) return;
   commitSave({ ...currentProfile().save, academy: validateAcademy(value) }, false);
+}
+
+export function saveDriving(value: DrivingProgress, profileId: string) {
+  if (profileId !== currentProfile().id) return;
+  commitSave({ ...currentProfile().save, driving: validateDriving(value) });
 }
 
 export function saveLesson(id:string,parameter:number,answers:number[],submit=false):LessonRecord {

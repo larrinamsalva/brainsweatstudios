@@ -1,5 +1,6 @@
 import { validateClasses } from '../data/classes';
 import { validateCheckpoints } from './checkpointValidation';
+import { freshDriving, validateDriving } from '../data/driving';
 import { freshAcademy, validateAcademy } from '../training/models';
 import { games, totalMissions } from '../data/games';
 import { clamp } from '../data/types';
@@ -9,7 +10,7 @@ export const SAVE_KEY = 'brain-sweat-studio:v1';
 export const localDate = (date = new Date()) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 const dayNumber = (date: string) => Date.parse(`${date}T12:00:00Z`) / 86400000;
 export const freshSave = (): SaveData => ({
-  version: 2, classes: {}, academy: freshAcademy(), checkpoints: {}, difficulty: 'explorer', xp: 0, points: 0, records: {}, milestones: [], badges: [],
+  version: 2, driving: freshDriving(), classes: {}, academy: freshAcademy(), checkpoints: {}, difficulty: 'explorer', xp: 0, points: 0, records: {}, milestones: [], badges: [],
   unlockedGames: games.map(g => g.id), streak: 0, lastPlayed: '', daily: {},
   settings: { music: 0, effects: 0.25, muted: false, reducedMotion: false, highContrast: false, tutorials: true, locale: 'en', haptics: false, botControl: false, labPalette: 'green' },
   selectedDifficulty: false,
@@ -62,6 +63,7 @@ const validDate = (v: unknown): v is string => typeof v === 'string' && /^\d{4}-
 export function validateSave(raw: unknown): SaveData {
   if (!isObject(raw) || (raw.version !== 1 && raw.version !== 2) || (typeof raw.difficulty !== 'string' || !['explorer', 'builder', 'master'].includes(raw.difficulty)) || !isObject(raw.records) || !isObject(raw.settings) || !isObject(raw.daily) || Object.keys(raw.records).length > totalMissions || Object.keys(raw.daily).length > 5000) throw new Error('This is not a compatible Brain Sweat save. Choose an exported version 1 or 2 JSON file.');
   const next = freshSave();
+  next.driving = validateDriving(raw.driving);
   next.academy = validateAcademy(raw.academy);
   next.difficulty = raw.difficulty as Difficulty;
   for (const [key, value] of Object.entries(raw.records)) {
