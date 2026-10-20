@@ -1,6 +1,7 @@
 import type { LessonRecord } from './classes';
 import type { AcademySave } from '../training/models';
 import type { ComponentType } from 'react';
+import type { DrivingProgress } from './driving';
 
 export type Difficulty = 'explorer' | 'builder' | 'master';
 export type Skill = 'Money' | 'Business' | 'Safety' | 'Digital literacy' | 'Problem solving' | 'Logic' | 'Work' | 'Health' | 'Independence' | 'Communication' | 'Technology' | 'Music' | 'Sound science' | 'Botany' | 'Ecology' | 'Mathematics' | 'Geometry' | 'Calculus' | 'Physics' | 'Engineering' | 'Robotics' | 'Computing' | 'Resilience' | 'Water systems' | 'Cooking' | 'Production';
@@ -19,6 +20,7 @@ export interface Settings { music: number; effects: number; muted: boolean; redu
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 export interface Checkpoint { state: Record<string, Json>; updatedAt: string; botPractice: boolean }
 export interface SaveData {
+  driving: DrivingProgress;
   version: 2; classes: Record<string, LessonRecord>; academy: AcademySave; difficulty: Difficulty; xp: number; points: number;
   records: Record<string, MissionRecord>; milestones: number[];
   badges: string[]; unlockedGames: GameId[];

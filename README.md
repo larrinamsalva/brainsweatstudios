@@ -59,6 +59,16 @@ Play the live studio: https://larrinamsalva.github.io/brainsweatstudios/
 
 Explorer simplifies resources and adds hints. Builder adds constraints. Master tightens resources and decision depth. Suggested ages are approximate, roughly 8–11, 12–14, and 15–17. No birthday is requested.
 
+## Teen DMV Practice
+
+Read 120 original California driving stories across 12 chapters, choose an answer,
+and learn the rule and its consequences. The separate Teen DMV Practice section
+includes detailed 3D road objects, missed-story review, 24-story mixed practice,
+profile-backed saving, offline access, and official DMV/CHP/court sources. Dated
+fine examples distinguish base fines from added assessments and fees. This is an
+independent learning companion, not an official DMV test or qualification.
+See [scope, sources and verification](docs/teen-dmv.md).
+
 ## Classes and retro lab
 
 Open `#/classes` for two classes in each learning world, plus four additional agent lessons. Each includes suggested preparation, an original lesson, worked example, adjustable experiment, three explained knowledge checks, and a link to the live game. Lessons and questions are authored in English and Spanish. Preparation is optional; nothing is locked.

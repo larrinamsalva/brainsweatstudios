@@ -1,3 +1,4 @@
+import { drawRoad } from './road3d';
 import { arenaObstacles, arenaSupplySites, fireObstacles } from '../games/rung4/models';
 import { roverWalls } from '../runtime/roverRules';
 export type Vec3 = [number,number,number];
@@ -17,6 +18,7 @@ export class MeshBuilder {
 }
 export function build3D(kind:string,data:Record<string,number>={},time=0):Mesh[] {
   const p=new MeshBuilder(),c=colors[kind]||'#a6d9ef';
+  if (kind === 'dmv' || kind === 'driving' || kind === 'cdl') { drawRoad(p, { ...data, ...(kind === 'dmv' ? {} : { scene: 3, truck: kind === 'cdl' ? 1 : 0 }) }, time); return p.meshes; }
   const floor=kind==='sports'?'#385c48':kind==='outpost'?'#5a624c':kind==='space'?'#253a54':kind==='learner'?'#294d58':'#304359';
   p.box(0,-0.5,0,9,0.35,7,'#233447');p.box(0,-0.17,0,8.6,0.12,6.6,floor);
   for(let i=-4;i<=4;i++)p.box(i,-0.03,0,0.018,0.018,6.3,'#4e677b');for(let i=-3;i<=3;i++)p.box(0,-0.03,i,8.3,0.018,0.018,'#4e677b');
@@ -43,13 +45,6 @@ export function build3D(kind:string,data:Record<string,number>={},time=0):Mesh[]
     p.box(0,0,-1.3,6,1.1,1.3,'#5c697d');p.box(0,1.1,-1.3,6.2,0.12,1.5,'#e0d3ba');p.cylinder(-1,1.22,-1.2,0.7,0.5,'#8899a2');p.cylinder(-1,1.73,-1.2,0.6,0.04,c);for(let i=0;i<6;i++)p.orb(-1+Math.sin(i)*0.45,1.79,-1.2+Math.cos(i)*0.4,0.1,'#b5d88c');for(let i=0;i<4;i++)p.orb(-1+Math.sin(time+i)*0.3,1.9+(time*0.3+i*0.22)%1,-1.2,0.05,'#c2d4df');p.box(2,0,1,1.3,2.4,1.1,'#c3d1d3');p.box(2,1.35,1.58,1.1,0.045,0.04,'#4e7189');
   }else if(kind==='creator'){
     p.box(0,0,-1.8,5,2.7,0.2,'#6f5897');p.box(0,0.3,-1.66,4.6,2.1,0.04,c);p.cylinder(0,0,0,0.9,0.13,'#aab5d2');p.box(-2.4,0.6,1,0.7,0.7,0.5,'#273a50');p.box(-2.4,0,1,0.08,0.6,0.08,'#b9cdd6');p.box(-2.4,0,1,1.1,0.05,0.7,'#596f87');for(const x of[-2.5,2.5]){p.box(x,0,-1,0.08,2.7,0.08,'#bbc5d8');p.orb(x,2.75,-1,0.42,'#ffe7ae');}p.box(1.8,0,1.8,1.5,0.6,0.8,'#445a72');for(let i=0;i<5;i++)p.box(1.25+i*0.25,0.62,1.8,0.08,0.1+((data.peak||0)+i)%4*0.03,0.5,c);
-  }else if(kind==='driving'||kind==='cdl'){
-    p.box(0,0,0,8.1,0.03,2.5,'#192b38');for(let i=-3;i<=3;i++)p.box(i,0.04,0,0.5,0.02,0.05,'#f1e5bb');
-    const x=-2+(data.progress||0)*4;p.box(x,0.2,0,kind==='cdl'?2.9:1.5,0.55,0.85,c);p.box(x-0.2,0.75,0,0.8,0.4,0.72,'#d4ecf3');
-    if(kind==='cdl'){p.box(x+1.1,0.75,0,1.7,1.05,0.94,'#8097aa');p.box(x+1.1,1.83,0,1.7,0.04,0.94,c);}
-    for(const dx of[-0.55,0.55])for(const dz of[-0.5,0.5])p.orb(x+dx,0.25,dz,0.23,'#111f2d');
-    for(const z of[-2,2])for(const sx of[-3,0,3]){p.box(sx,0,z,0.08,1.8,0.08,'#859dad');p.box(sx,1.4,z,0.6,0.6,0.08,z<0?'#e09789':'#bbd392');}
-    for(let i=0;i<5;i++)p.box(2.4+i*0.22,0.05,0,0.08,0.02,2.4,'#d2d8c7');
   }else if(kind==='trade'){
     p.box(0,0,0,6,0.9,3.8,'#526676');p.box(0,0.9,0,6.2,0.1,4,'#b2916d');
     const w=data.width||3.4,h=data.height||2.2,n=data.parts??4;for(let i=0;i<Math.min(4,n);i++){if(i%2===0)p.box(0,1,-h/2+(i/2)*h,w,0.16,0.17,c);else p.box(-w/2+Math.floor(i/2)*w,1,0,0.17,0.16,h,c);}

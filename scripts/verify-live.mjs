@@ -23,6 +23,16 @@ try {
     await link.waitFor(); assert.equal(await link.getAttribute('href'), `#/${route}`);
   }
   console.log('Live home verified: matching release metadata, six adventure paths and retained Advanced Lab entrances.');
+  await page.getByRole('link', { name: 'Teen DMV Practice', exact: true }).click();
+  await page.getByRole('heading', { name: 'Teen DMV Practice', exact: true }).waitFor();
+  assert.equal(await page.locator('.road-chapter').count(), 12);
+  await page.getByLabel('Choose a story in Read the road', { exact: true }).selectOption('signs-1');
+  await page.getByRole('radio', { name: /Stop completely before the limit line or crosswalk/ }).check();
+  await page.getByRole('button', { name: 'Check my choice', exact: true }).click();
+  await page.getByText('Correct choice.', { exact: true }).waitFor();
+  await page.reload(); await page.getByText('Correct choice.', { exact: true }).waitFor();
+  assert.equal(await page.locator('.road-story-penalty .road-penalty').count(), 1);
+  console.log('Live teen driving verified: 12 chapters, sourced story feedback, dated fine example and saved-answer restoration.');
   await page.getByRole('link', { name: 'Assistant & council', exact: true }).click(); await page.getByRole('heading', { name: 'Your personal assistant', exact: true }).waitFor();
   for (const role of ['Mentor', 'Benefactor', 'Strategist']) await page.getByRole('heading', { name: role, exact: true }).waitFor();
   await page.getByLabel('Ask your assistant', { exact: true }).fill('Help me plan a garden'); await page.getByRole('button', { name: 'Send to assistant', exact: true }).click(); await page.getByRole('link', { name: 'Botany Garden · Mission 1', exact: false }).waitFor();
